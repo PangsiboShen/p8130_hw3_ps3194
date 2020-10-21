@@ -1,0 +1,128 @@
+---
+title: "p8130_hw3_ps3194"
+author: "Pangsibo Shen"
+date: "10/20/2020"
+output:
+  html_document:
+    toc: TRUE
+  
+---
+
+```{r, message = FALSE}
+library(tidyverse)
+```
+### **Problem 1**
+
+```{r import and tidy data, message = FALSE}
+exercise = read_csv("./data/Exercise.csv") %>%
+  janitor::clean_names()
+```
+
+#### **a) Perform appropriate tests to assess if the Systolic BP at 6 months is significantly different from the baseline values for each of the groups:**
+
+##### **i) Intervention group**
+
+solution: 
+we are using two-sided paired t-test $\mu_b$ stands for the mean systolic BP for baseline group and $\mu_a$ stands for the mean systolic BP for 6 month group.
+The null and alternative hypotheeses are:
+$$H_0: \mu_{a}- \mu_b = 0$$
+$$H_1: \mu_{a}- \mu_b \neq 0$$
+with a pre-specified significance level $\alpha$ = 0.05, compute the test statistics:
+$$t= \frac{\bar{d} -0}{s_d/\sqrt{n}}, DF: t_{n-1} $$
+where $\bar{d}$ stands for mean difference from sample and $s_d$ stands for standard deviation of differences.
+
+```{r intervention}
+intervention = exercise %>%
+  filter(group == 1)
+
+systolic_pre_1 = pull(intervention, systolic_pre) #baseline systolic data for intervention group
+
+systolic_post_1 = pull(intervention, systolic_post) #6 month systolic data for intervention group
+
+systolic_diff_1 = systolic_post_1 - systolic_pre_1 # difference in systolic BP
+
+sd_diff_1 = sd(systolic_diff_1) # standard deviation for difference in systolic BP
+
+test_systolic_1 = mean(systolic_diff_1)/(sd_diff_1/sqrt(length(systolic_diff_1))) 
+
+#t.test(systolic_post_1, systolic_pre_1 , paired = T, alternative = "two.sided")
+```
+
+```{r}
+abs(test_systolic_1) # absolute value of t statistic
+
+qt(1 - 0.05/2,length(systolic_diff_1) - 1) # critical value
+```
+$$|t| > t_{n-1, 1- \alpha/2} $$
+the absolute t statistic equals `r abs(test_systolic_1)` which is greater the critical value `r qt(1 - 0.05/2,length(systolic_diff_1) - 1)`. Hence we reject the null hypothesis which means that the Systolic BP at 6 months is significantly different from the baseline values for intervention group.
+
+##### **ii) Control group**
+
+solution: 
+we are using two-sided paired t-test $\mu_b$ stands for the mean systolic BP for baseline group and $\mu_a$ stands for the mean systolic BP for 6 month group.
+The null and alternative hypotheeses are:
+$$H_0: \mu_{a}- \mu_b = 0$$
+$$H_1: \mu_{a}- \mu_b \neq 0$$
+with a pre-specified significance level $\alpha$ = 0.05, compute the test statistics:
+$$t= \frac{\bar{d} -0}{s_d/\sqrt{n}}, DF: t_{n-1} $$
+where $\bar{d}$ stands for mean difference from sample and $s_d$ stands for standard deviation of differences.
+
+```{r control}
+control = exercise %>%
+  filter(group == 0)
+
+systolic_pre_0 = pull(control, systolic_pre) #baseline systolic data for control group
+
+systolic_post_0 = pull(control, systolic_post) #6 month systolic data for control group
+
+systolic_diff_0 = systolic_post_0 - systolic_pre_0 # difference in systolic BP
+
+sd_diff_0 = sd(systolic_diff_0) # standard deviation for difference in systolic BP
+
+test_systolic_0 = mean(systolic_diff_0)/(sd_diff_0/sqrt(length(systolic_diff_0))) 
+
+#t.test(systolic_post_0, systolic_pre_0 , paired = T, alternative = "two.sided")
+```
+
+```{r}
+abs(test_systolic_0) # absolute value of t statistic
+
+qt(1 - 0.05/2,length(systolic_diff_0) - 1) # critical value
+```
+$$|t| < t_{n-1, 1- \alpha/2} $$
+the absolute t statistic equals `r abs(test_systolic_0)` which is less the critical value `r qt(1 - 0.05/2,length(systolic_diff_0) - 1)`. Hence we fail to reject null hypothesis which means that there is no difference between systolic BP at 6 month and at baseline for control group.
+
+---------------------
+
+#### **b)  Now perform a test and provide the 95% confidence interval to assess the Systolic BP absolute changes between the two groups.**
+
+solution: 
+We are going to use two-sample independent t-test for the problem. First, we need to test for equality of variances. 
+$$H_0: \sigma_{c}^2- \sigma_i^2 = 0$$
+$$H_1: \sigma_{c}^2- \sigma_i^2 \neq 0$$
+with a pre-specified significance level $\alpha$ = 0.05, compute the test statistics:
+$$F= \frac{s_c^2}{s_i^2}, DF: F_{n_c-1,n_i-1} $$
+```{r variance equality test}
+# Testing equality of variances for two independent samples
+# drawn from two underlying normal distributions.
+
+# control(1): s1=14.81, n1=36, x1_bar=-3.33
+# intervention(2): s2=17.17, n2=36, x2_bar=-8.58
+
+F_test = 14.81^2/17.17^2
+F_test
+
+F_crit = qf(.975, df1=35, df2=35) 
+F_crit
+```
+$$F <  F_{n_c-1,n_i-1,1-\alpha/2} $$
+F statistic equals `r F_test` which is less the critical value `r qf(.975, df1=35, df2=35)`. Hence we reject the null hypothesis $H_0$ which means that there is a significant difference in sample variance between control and intervention group.Therefore, We are going to use two-sample independent t-test with unequal variances.
+
+
+
+
+
+
+
+
+
