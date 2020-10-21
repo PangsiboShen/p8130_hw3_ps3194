@@ -245,16 +245,78 @@ z_test_left = function(sample, mu, sd, cr_z){
   } else {
     print(0) #print 0 when we fail to reject null hypothesis
   }
-  print(z)
+  print(z) #print the z statistic
 }
 
 z_test_left(sample1, 120, 15, qnorm(1 - 0.05))
 ```
 
-In this case, z statistic (0.633) is less than the critical value (1.64) hence we fail to reject the null hypothesis. \
+In this case, z statistic (0.633) is less than the critical value (1.64) hence we fail to reject the null hypothesis. 
 
 --------
 
 ##### **b)Now generate 100 random samples of size n = 20 from the underlying (null) true distribution and repeat the process in part (a) for each sample (calculate the test statistic, compare to the critical value, and record 1 or 0 based on criteria above). Report the percentage of 1s and 0s respectively across the 100 samples. The percentage of 1s represents the type I error. **
 
+solution:
+
+In order to stimulate this model 100 times, I first write a function called z_test_repeat which takes four inputs: the sample, the true mean $\mu$, standard deviation, and critical value for $\alpha = 5%$. z_test_repeat function will return 1 when we reject null hypothesis and 0 when we fail to reject null hypothesis. Then, we are going to iterate the z_test_repeat function 100 times and record each output into an empty list. The percentage of 1's can be calculated by taking the average of the list.
+
+```{r}
+set.seed(321)
+
+z_test_repeat = function(sample, mu, sd, cr_z){
+  z = (mean(sample) - mu)/(sd/sqrt(length(sample)))
+  if(z > cr_z){
+    return(1) #return 1 when we reject null hypothesis
+  } else {
+    return(0) #return 0 when we fail to reject null hypothesis
+  }
+}
+
+list_z_100 = list() #initialize an empty list
+
+# using while loop to iterate 100 times
+i = 1
+while (i <= 100) {
+  list_z_100[i] = 
+    z_test_repeat(rnorm(20, mean = 120, sd = 15), 120, 15, qnorm(1 - 0.05)) #add 1s and 0s into the empty list
+  i = i + 1
+}
+
+mean(as.numeric(list_z_100))*100 #type I error percentage
+```
+After we repeat the process in part a for 100 times, the percentage of 1s is `r mean(as.numeric(list_z_100))*100`% and the percentage of 0s is `r (1-mean(as.numeric(list_z_100)))*100`%. Hence the type I error is `r mean(as.numeric(list_z_100))*100`%.
+
+-----------
+
+##### **c) Now generate 1000 random samples of size n = 20 from the underlying (null) true distribution, repeat the same process, and report the percentage of 1s and 0s across the 1000 samples.**
+
+solution:
+
+In order to stimulate the model 1000 times,we can use z_test_repeat function from part b and iterate it 1000 times and record each output into an empty list. The percentage of 1's can be calculated by taking the average of the list.
+
+```{r}
+set.seed(3)
+
+list_z_1000 = list() #initialize an empty list
+
+# using while loop to iterate 1000 times
+i = 1
+while (i <= 1000) {
+  list_z_1000[i] = 
+    z_test_repeat(rnorm(20, mean = 120, sd = 15), 120, 15, qnorm(1 - 0.05)) #add 1s and 0s into the empty list
+  i = i + 1
+}
+
+mean(as.numeric(list_z_1000))*100 #type I error percentage
+```
+After we repeat the process in part a for 1000 times, the percentage of 1s is `r mean(as.numeric(list_z_1000))*100`% and the percentage of 0s is `r (1-mean(as.numeric(list_z_1000)))*100`%. Hence the type I error is `r mean(as.numeric(list_z_1000))*100`%.
+
+----------------------
+
+##### ** d)Final conclusions: compare the type I errors (percentage of 1s) from part b) and c). How do they compare to the level that we initially imposed (i.e. 0.05)? Comment on your findings.**
+
+solution:
+
+From part b with 100 trials, we had type I error of 3% and from part c with 1000 trials, we had type I error of 4.1%. As we increased the number of repeated trials (from 100 times to 1000 times), we got a closer approximate of type I error to the initially imposed value of 5%. 
 
