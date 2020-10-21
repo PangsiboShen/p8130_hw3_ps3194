@@ -25,7 +25,8 @@ exercise = read_csv("./data/Exercise.csv") %>%
 
 solution: 
 we are using two-sided paired t-test $\mu_b$ stands for the mean systolic BP for baseline group and $\mu_a$ stands for the mean systolic BP for 6 month group.
-The null and alternative hypotheeses are:
+The null and alternative hypotheses are:
+
 $$H_0: \mu_{a}- \mu_b = 0$$
 $$H_1: \mu_{a}- \mu_b \neq 0$$
 with a pre-specified significance level $\alpha$ = 0.05, compute the test statistics:
@@ -142,12 +143,12 @@ t statistic equals `r t_stats` which is less the critical value `r qt(0.975,70)`
 absolute changes between two groups.
 
 The formula for two sided 95% confidence interval for two-independent samples with equal variance:
-$$(\bar{x_c} -\bar{x_i} - t_{n_c+n_i-2,1-\alpha/2}*s*\sqrt{\frac{1}{n_c}+\frac{1}{n_i}},\bar{x_c} -\bar{x_i} + t_{n_c+n_i-2,1-\alpha/2}*s*\sqrt{\frac{1}{n_c}+\frac{1}{n_i}})$$
+$$(\bar{x_i} -\bar{x_c} - t_{n_c+n_i-2,1-\alpha/2}*s*\sqrt{\frac{1}{n_c}+\frac{1}{n_i}},\bar{x_i} -\bar{x_c} + t_{n_c+n_i-2,1-\alpha/2}*s*\sqrt{\frac{1}{n_c}+\frac{1}{n_i}})$$
 
 ```{r}
-CI_lower = -3.33+8.58 - qt(0.975,70)*std_pooled*sqrt((1/36) + (1/36))
+CI_lower = 3.33 - 8.58 - qt(0.975,70)*std_pooled*sqrt((1/36) + (1/36))
 CI_lower
-CI_upper = -3.33+8.58 + qt(0.975,70)*std_pooled*sqrt((1/36) + (1/36))
+CI_upper = 3.33 - 8.58 + qt(0.975,70)*std_pooled*sqrt((1/36) + (1/36))
 CI_upper
 ```
 Hence the two sided 95% confidence interval is (`r CI_lower`,`r CI_upper`)

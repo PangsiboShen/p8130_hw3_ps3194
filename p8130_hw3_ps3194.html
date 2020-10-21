@@ -396,7 +396,8 @@ library(ggpubr)</code></pre>
 <h4><strong>a) Perform appropriate tests to assess if the Systolic BP at 6 months is significantly different from the baseline values for each of the groups:</strong></h4>
 <div id="i-intervention-group" class="section level5">
 <h5><strong>i) Intervention group</strong></h5>
-<p>solution: we are using two-sided paired t-test <span class="math inline">\(\mu_b\)</span> stands for the mean systolic BP for baseline group and <span class="math inline">\(\mu_a\)</span> stands for the mean systolic BP for 6 month group. The null and alternative hypotheeses are: <span class="math display">\[H_0: \mu_{a}- \mu_b = 0\]</span> <span class="math display">\[H_1: \mu_{a}- \mu_b \neq 0\]</span> with a pre-specified significance level <span class="math inline">\(\alpha\)</span> = 0.05, compute the test statistics: <span class="math display">\[t= \frac{\bar{d} -0}{s_d/\sqrt{n}}, DF: t_{n-1} \]</span> where <span class="math inline">\(\bar{d}\)</span> stands for mean difference from sample and <span class="math inline">\(s_d\)</span> stands for standard deviation of differences.</p>
+<p>solution: we are using two-sided paired t-test <span class="math inline">\(\mu_b\)</span> stands for the mean systolic BP for baseline group and <span class="math inline">\(\mu_a\)</span> stands for the mean systolic BP for 6 month group. The null and alternative hypotheses are:</p>
+<p><span class="math display">\[H_0: \mu_{a}- \mu_b = 0\]</span> <span class="math display">\[H_1: \mu_{a}- \mu_b \neq 0\]</span> with a pre-specified significance level <span class="math inline">\(\alpha\)</span> = 0.05, compute the test statistics: <span class="math display">\[t= \frac{\bar{d} -0}{s_d/\sqrt{n}}, DF: t_{n-1} \]</span> where <span class="math inline">\(\bar{d}\)</span> stands for mean difference from sample and <span class="math inline">\(s_d\)</span> stands for standard deviation of differences.</p>
 <pre class="r"><code>intervention = exercise %&gt;%
   filter(group == 1)
 
@@ -469,14 +470,14 @@ t_stats</code></pre>
 qt(0.975,70) # 2.10</code></pre>
 <pre><code>## [1] 1.994437</code></pre>
 <p><span class="math display">\[|t| &lt; t_{n_c+n_i-2,1-\alpha/2}\]</span> t statistic equals 1.3892095 which is less the critical value 1.9944371. Hence we fail to reject the null hypothesis <span class="math inline">\(H_0\)</span> which means that there is no significant difference in the Systolic BP absolute changes between two groups.</p>
-<p>The formula for two sided 95% confidence interval for two-independent samples with equal variance: <span class="math display">\[(\bar{x_c} -\bar{x_i} - t_{n_c+n_i-2,1-\alpha/2}*s*\sqrt{\frac{1}{n_c}+\frac{1}{n_i}},\bar{x_c} -\bar{x_i} + t_{n_c+n_i-2,1-\alpha/2}*s*\sqrt{\frac{1}{n_c}+\frac{1}{n_i}})\]</span></p>
-<pre class="r"><code>CI_lower = -3.33+8.58 - qt(0.975,70)*std_pooled*sqrt((1/36) + (1/36))
+<p>The formula for two sided 95% confidence interval for two-independent samples with equal variance: <span class="math display">\[(\bar{x_i} -\bar{x_c} - t_{n_c+n_i-2,1-\alpha/2}*s*\sqrt{\frac{1}{n_c}+\frac{1}{n_i}},\bar{x_i} -\bar{x_c} + t_{n_c+n_i-2,1-\alpha/2}*s*\sqrt{\frac{1}{n_c}+\frac{1}{n_i}})\]</span></p>
+<pre class="r"><code>CI_lower = 3.33 - 8.58 - qt(0.975,70)*std_pooled*sqrt((1/36) + (1/36))
 CI_lower</code></pre>
-<pre><code>## [1] -2.287232</code></pre>
-<pre class="r"><code>CI_upper = -3.33+8.58 + qt(0.975,70)*std_pooled*sqrt((1/36) + (1/36))
+<pre><code>## [1] -12.78723</code></pre>
+<pre class="r"><code>CI_upper = 3.33 - 8.58 + qt(0.975,70)*std_pooled*sqrt((1/36) + (1/36))
 CI_upper</code></pre>
-<pre><code>## [1] 12.78723</code></pre>
-<p>Hence the two sided 95% confidence interval is (-2.2872324,12.7872324)</p>
+<pre><code>## [1] 2.287232</code></pre>
+<p>Hence the two sided 95% confidence interval is (-12.7872324,2.2872324)</p>
 <hr />
 </div>
 <div id="c-what-are-the-main-underlying-assumptions-for-the-tests-performed-in-parts-a-and-b" class="section level4">
