@@ -54,7 +54,7 @@ abs(test_systolic_1) # absolute value of t statistic
 qt(1 - 0.05/2,length(systolic_diff_1) - 1) # critical value
 ```
 $$|t| > t_{n-1, 1- \alpha/2} $$
-the absolute t statistic equals `r abs(test_systolic_1)` which is greater the critical value `r qt(1 - 0.05/2,length(systolic_diff_1) - 1)`. Hence we reject the null hypothesis which means that the Systolic BP at 6 months is significantly different from the baseline values for intervention group.
+the absolute t statistic equals `r abs(test_systolic_1)` which is greater the critical value `r qt(1 - 0.05/2,length(systolic_diff_1) - 1)`. Hence we reject the null hypothesis $H_0$ which means that the Systolic BP at 6 months is significantly different from the baseline values for intervention group.
 
 ##### **ii) Control group**
 
@@ -90,7 +90,7 @@ abs(test_systolic_0) # absolute value of t statistic
 qt(1 - 0.05/2,length(systolic_diff_0) - 1) # critical value
 ```
 $$|t| < t_{n-1, 1- \alpha/2} $$
-the absolute t statistic equals `r abs(test_systolic_0)` which is less the critical value `r qt(1 - 0.05/2,length(systolic_diff_0) - 1)`. Hence we fail to reject null hypothesis which means that there is no difference between systolic BP at 6 month and at baseline for control group.
+the absolute t statistic equals `r abs(test_systolic_0)` which is less the critical value `r qt(1 - 0.05/2,length(systolic_diff_0) - 1)`. Hence we fail to reject null hypothesis $H_0$ which means that there is no difference between systolic BP at 6 month and at baseline for control group.
 
 ---------------------
 
@@ -102,6 +102,7 @@ $$H_0: \sigma_{c}^2- \sigma_i^2 = 0$$
 $$H_1: \sigma_{c}^2- \sigma_i^2 \neq 0$$
 with a pre-specified significance level $\alpha$ = 0.05, compute the test statistics:
 $$F= \frac{s_c^2}{s_i^2}, DF: F_{n_c-1,n_i-1} $$
+where $s_c^2$ stands for sample variance for control group and $s_i^2$ stands for sample variance for intervention group.
 ```{r variance equality test}
 # Testing equality of variances for two independent samples
 # drawn from two underlying normal distributions.
@@ -116,10 +117,39 @@ F_crit = qf(.975, df1=35, df2=35)
 F_crit
 ```
 $$F <  F_{n_c-1,n_i-1,1-\alpha/2} $$
-F statistic equals `r F_test` which is less the critical value `r qf(.975, df1=35, df2=35)`. Hence we reject the null hypothesis $H_0$ which means that there is a significant difference in sample variance between control and intervention group.Therefore, We are going to use two-sample independent t-test with unequal variances.
+F statistic equals `r F_test` which is less the critical value `r qf(.975, df1=35, df2=35)`. Hence we fail to reject the null hypothesis $H_0$ which means that there is no significant difference in pop. variance between control and intervention group.Therefore, We are going to use two-sample independent t-test with equal variances.
+$$H_0: \mu_{c}= \mu_i$$
+$$H_1: \mu_{c} \neq \mu_i$$
+with a pre-specified significance level $\alpha$ = 0.05, compute the test statistics:
+$$t= \frac{\bar{x_c} -\bar{x_i}}{s\sqrt{\frac{1}{n_c}+\frac{1}{n_i}}}, DF: t_{n_c+n_i-2} $$
+where $\bar{x_c}$ stands for Systolic BP absolute changes for control group and $\bar{x_i}$ stands for Systolic BP absolute changes for intervention group.$s$ stands for pooled estimate of standard deviation which can be calculated by the formula below.
 
+$$s = \sqrt\frac{(n_c-1)s_c^2+(n_i-1)s_i^2}{n_c+n_i-2} $$
 
+```{r t test with equal variance}
+std_pooled = sqrt(((14.81^2*35)+(17.17^2*35))/70)
 
+t_stats = (-3.33+8.58)/(std_pooled*sqrt((1/36)+(1/36)))
+t_stats
+# Compare t_stats to the critical value: t with 18 df
+
+qt(0.975,70) # 2.10
+
+```
+$$|t| < t_{n_c+n_i-2,1-\alpha/2}$$
+t statistic equals `r t_stats` which is less the critical value `r qt(0.975,70)`. Hence we fail to reject the null hypothesis $H_0$ which means that there is no significant difference in the Systolic BP
+absolute changes between two groups.
+
+The formula for two sided 95% confidence interval for two-independent samples with equal variance:
+$$(\bar{x_c} -\bar{x_i} - t_{n_c+n_i-2,1-\alpha/2}*s*\sqrt{\frac{1}{n_c}+\frac{1}{n_i}},\bar{x_c} -\bar{x_i} + t_{n_c+n_i-2,1-\alpha/2}*s*\sqrt{\frac{1}{n_c}+\frac{1}{n_i}})$$
+
+```{r}
+CI_lower = -3.33+8.58 - qt(0.975,70)*std_pooled*sqrt((1/36) + (1/36))
+CI_lower
+CI_upper = -3.33+8.58 + qt(0.975,70)*std_pooled*sqrt((1/36) + (1/36))
+CI_upper
+```
+Hence the two sided 95% confidence interval is (`r CI_lower`,`r CI_upper`)
 
 
 

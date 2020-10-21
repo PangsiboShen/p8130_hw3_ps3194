@@ -412,7 +412,7 @@ test_systolic_1 = mean(systolic_diff_1)/(sd_diff_1/sqrt(length(systolic_diff_1))
 <pre><code>## [1] 2.999645</code></pre>
 <pre class="r"><code>qt(1 - 0.05/2,length(systolic_diff_1) - 1) # critical value</code></pre>
 <pre><code>## [1] 2.030108</code></pre>
-<p><span class="math display">\[|t| &gt; t_{n-1, 1- \alpha/2} \]</span> the absolute t statistic equals 2.9996446 which is greater the critical value 2.0301079. Hence we reject the null hypothesis which means that the Systolic BP at 6 months is significantly different from the baseline values for intervention group.</p>
+<p><span class="math display">\[|t| &gt; t_{n-1, 1- \alpha/2} \]</span> the absolute t statistic equals 2.9996446 which is greater the critical value 2.0301079. Hence we reject the null hypothesis <span class="math inline">\(H_0\)</span> which means that the Systolic BP at 6 months is significantly different from the baseline values for intervention group.</p>
 </div>
 <div id="ii-control-group" class="section level5">
 <h5><strong>ii) Control group</strong></h5>
@@ -435,13 +435,13 @@ test_systolic_0 = mean(systolic_diff_0)/(sd_diff_0/sqrt(length(systolic_diff_0))
 <pre><code>## [1] 1.350154</code></pre>
 <pre class="r"><code>qt(1 - 0.05/2,length(systolic_diff_0) - 1) # critical value</code></pre>
 <pre><code>## [1] 2.030108</code></pre>
-<p><span class="math display">\[|t| &lt; t_{n-1, 1- \alpha/2} \]</span> the absolute t statistic equals 1.3501543 which is less the critical value 2.0301079. Hence we fail to reject null hypothesis which means that there is no difference between systolic BP at 6 month and at baseline for control group.</p>
+<p><span class="math display">\[|t| &lt; t_{n-1, 1- \alpha/2} \]</span> the absolute t statistic equals 1.3501543 which is less the critical value 2.0301079. Hence we fail to reject null hypothesis <span class="math inline">\(H_0\)</span> which means that there is no difference between systolic BP at 6 month and at baseline for control group.</p>
 <hr />
 </div>
 </div>
 <div id="b-now-perform-a-test-and-provide-the-95-confidence-interval-to-assess-the-systolic-bp-absolute-changes-between-the-two-groups." class="section level4">
 <h4><strong>b) Now perform a test and provide the 95% confidence interval to assess the Systolic BP absolute changes between the two groups.</strong></h4>
-<p>solution: We are going to use two-sample independent t-test for the problem. First, we need to test for equality of variances. <span class="math display">\[H_0: \sigma_{c}^2- \sigma_i^2 = 0\]</span> <span class="math display">\[H_1: \sigma_{c}^2- \sigma_i^2 \neq 0\]</span> with a pre-specified significance level <span class="math inline">\(\alpha\)</span> = 0.05, compute the test statistics: <span class="math display">\[F= \frac{s_c^2}{s_i^2}, DF: F_{n_c-1,n_i-1} \]</span></p>
+<p>solution: We are going to use two-sample independent t-test for the problem. First, we need to test for equality of variances. <span class="math display">\[H_0: \sigma_{c}^2- \sigma_i^2 = 0\]</span> <span class="math display">\[H_1: \sigma_{c}^2- \sigma_i^2 \neq 0\]</span> with a pre-specified significance level <span class="math inline">\(\alpha\)</span> = 0.05, compute the test statistics: <span class="math display">\[F= \frac{s_c^2}{s_i^2}, DF: F_{n_c-1,n_i-1} \]</span> where <span class="math inline">\(s_c^2\)</span> stands for sample variance for control group and <span class="math inline">\(s_i^2\)</span> stands for sample variance for intervention group.</p>
 <pre class="r"><code># Testing equality of variances for two independent samples
 # drawn from two underlying normal distributions.
 
@@ -454,7 +454,26 @@ F_test</code></pre>
 <pre class="r"><code>F_crit = qf(.975, df1=35, df2=35) 
 F_crit</code></pre>
 <pre><code>## [1] 1.961089</code></pre>
-<p><span class="math display">\[F &lt;  F_{n_c-1,n_i-1,1-\alpha/2} \]</span> F statistic equals 0.7439942 which is less the critical value 1.9610894. Hence we reject the null hypothesis <span class="math inline">\(H_0\)</span> which means that there is a significant difference in sample variance between control and intervention group.Therefore, We are going to use two-sample independent t-test with unequal variances.</p>
+<p><span class="math display">\[F &lt;  F_{n_c-1,n_i-1,1-\alpha/2} \]</span> F statistic equals 0.7439942 which is less the critical value 1.9610894. Hence we fail to reject the null hypothesis <span class="math inline">\(H_0\)</span> which means that there is no significant difference in pop. variance between control and intervention group.Therefore, We are going to use two-sample independent t-test with equal variances. <span class="math display">\[H_0: \mu_{c}= \mu_i\]</span> <span class="math display">\[H_1: \mu_{c} \neq \mu_i\]</span> with a pre-specified significance level <span class="math inline">\(\alpha\)</span> = 0.05, compute the test statistics: <span class="math display">\[t= \frac{\bar{x_c} -\bar{x_i}}{s\sqrt{\frac{1}{n_c}+\frac{1}{n_i}}}, DF: t_{n_c+n_i-2} \]</span> where <span class="math inline">\(\bar{x_c}\)</span> stands for Systolic BP absolute changes for control group and <span class="math inline">\(\bar{x_i}\)</span> stands for Systolic BP absolute changes for intervention group.<span class="math inline">\(s\)</span> stands for pooled estimate of standard deviation which can be calculated by the formula below.</p>
+<p><span class="math display">\[s = \sqrt\frac{(n_c-1)s_c^2+(n_i-1)s_i^2}{n_c+n_i-2} \]</span></p>
+<pre class="r"><code>std_pooled = sqrt(((14.81^2*35)+(17.17^2*35))/70)
+
+t_stats = (-3.33+8.58)/(std_pooled*sqrt((1/36)+(1/36)))
+t_stats</code></pre>
+<pre><code>## [1] 1.38921</code></pre>
+<pre class="r"><code># Compare t_stats to the critical value: t with 18 df
+
+qt(0.975,70) # 2.10</code></pre>
+<pre><code>## [1] 1.994437</code></pre>
+<p><span class="math display">\[|t| &lt; t_{n_c+n_i-2,1-\alpha/2}\]</span> t statistic equals 1.3892095 which is less the critical value 1.9944371. Hence we fail to reject the null hypothesis <span class="math inline">\(H_0\)</span> which means that there is no significant difference in the Systolic BP absolute changes between two groups.</p>
+<p>The formula for two sided 95% confidence interval for two-independent samples with equal variance: <span class="math display">\[(\bar{x_c} -\bar{x_i} - t_{n_c+n_i-2,1-\alpha/2}*s*\sqrt{\frac{1}{n_c}+\frac{1}{n_i}},\bar{x_c} -\bar{x_i} + t_{n_c+n_i-2,1-\alpha/2}*s*\sqrt{\frac{1}{n_c}+\frac{1}{n_i}})\]</span></p>
+<pre class="r"><code>CI_lower = -3.33+8.58 - qt(0.975,70)*std_pooled*sqrt((1/36) + (1/36))
+CI_lower</code></pre>
+<pre><code>## [1] -2.287232</code></pre>
+<pre class="r"><code>CI_upper = -3.33+8.58 + qt(0.975,70)*std_pooled*sqrt((1/36) + (1/36))
+CI_upper</code></pre>
+<pre><code>## [1] 12.78723</code></pre>
+<p>Hence the two sided 95% confidence interval is (-2.2872324,12.7872324)</p>
 </div>
 </div>
 
