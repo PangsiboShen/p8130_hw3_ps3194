@@ -10,6 +10,7 @@ output:
 
 ```{r, message = FALSE}
 library(tidyverse)
+library(ggpubr)
 ```
 ### **Problem 1**
 
@@ -151,8 +152,74 @@ CI_upper
 ```
 Hence the two sided 95% confidence interval is (`r CI_lower`,`r CI_upper`)
 
+---------
+
+#### **c) What are the main underlying assumptions for the tests performed in parts a) and b)? **
+
+solution:
+The underlying assumption for parts a and b is that two samples are normally distributed. Also, we assume that two samples are independent for part b. 
+
+##### **i) ) Use graphical displays to check the normality assumption and discuss the findings.**
+
+solution:
+
+```{r}
+plot_control_pre = control %>%
+  ggplot(aes(x = systolic_pre)) +
+  geom_density() +
+  ggtitle("Systolic BP at baseline control") +
+  labs(x = " Systolic Blood Pressure")
+  
+
+plot_control_post = control %>%
+  ggplot(aes(x = systolic_post)) +
+  geom_density() +
+  ggtitle("Systolic BP at 6 month control") +
+  labs(x = " Systolic Blood Pressure")
+
+plot_control_diff = control %>%
+  mutate(systolic_diff = systolic_post - systolic_pre) %>%
+  ggplot(aes(x = systolic_diff)) +
+  geom_density() +
+  ggtitle("Systolic BP difference control") +
+  labs(x = " Systolic Blood Pressure")
+  
+
+plot_intervention_pre = intervention %>%
+  ggplot(aes(x = systolic_pre)) +
+  geom_density() +
+  ggtitle("Systolic BP at baseline intervention") +
+  labs(x = " Systolic Blood Pressure")
+
+plot_intervention_post = intervention %>%
+  ggplot(aes(x = systolic_post)) +
+  geom_density() +
+  ggtitle("Systolic BP at 6 month intervention") +
+  labs(x = " Systolic Blood Pressure")
+
+plot_intervention_diff = intervention %>%
+  mutate(systolic_diff = systolic_post - systolic_pre) %>%
+  ggplot(aes(x = systolic_diff)) +
+  geom_density() +
+  ggtitle("Systolic BP difference intervention") +
+  labs(x = " Systolic Blood Pressure")
+
+ggarrange(plot_control_pre,plot_control_post,plot_intervention_pre,plot_intervention_post,plot_control_diff, plot_intervention_diff, ncol = 2, nrow = 3)
+```
 
 
+For the distribution of Systolic BP at baseline for control group, there are two peaks in the center.
+For the distribution of Systolic BP at 6 month for control group, there are two peaks in the center and the first peak is higher than the second peak.
+For the distribution of Systolic BP at baseline for intervention group, there are two peaks in the center and the first peak is higher than the second peak.
+For the distribution of Systolic BP at 6 month for intervention group, the graph is fairly normal distributed.
+For the distribution of Systolic BP difference for control group, the graph is fairly normal distributed.
+For the distribution of Systolic BP difference for intervention group, there are two peaks in the center and the second peak is higher than the first peak and the curve is right - skewed.
 
+##### **ii) If normality is questionable, how does this affect the tests validity and what are some possible remedies?**
 
+solution:
+We often assume that independent t-test is robust against violation of the normality assumption, especially when the sample size is greater than 30.We can still be fairly confidence about our test results. As for possible remedies, we can increase the sample size for both group. With larger sample sizes, the distributions will approximate toward normal distribution. Furthermore, we could also use non parametric t-test which does not assume anything about the underlying distribution.
 
+------------
+
+### **Problem 2**
