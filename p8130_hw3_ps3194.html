@@ -538,6 +538,35 @@ ggarrange(plot_control_pre,plot_control_post,plot_intervention_pre,plot_interven
 </div>
 <div id="problem-2" class="section level3">
 <h3><strong>Problem 2</strong></h3>
+<p><span class="math display">\[ H_0 : \mu = \mu_0 \]</span> <span class="math display">\[ H_1 : \mu &lt; \mu_0 \]</span> where <span class="math inline">\(\mu_o\)</span> is the average IQ score of Ivy League colleges which is 120. <span class="math inline">\(\mu\)</span> stands for the true mean.The standard deviation is 15 with a pre-specified significance level <span class="math inline">\(\alpha\)</span> = 0.05.</p>
+<div id="a-generate-one-random-sample-of-size-n20-from-the-underlying-null-true-distribution.-calculate-the-test-statistic-compare-to-the-critical-value-and-report-the-conclusion-1-if-you-reject-h_0-or-0-if-you-fail-to-rejected-h_0." class="section level5">
+<h5><strong>a) Generate one random sample of size n=20 from the underlying (null) true distribution. Calculate the test statistic, compare to the critical value and report the conclusion: 1, if you reject <span class="math inline">\(H_0\)</span> or 0, if you fail to rejected <span class="math inline">\(H_0\)</span>. </strong></h5>
+<p>solution:</p>
+<pre class="r"><code>set.seed(123)
+
+sample1  = rnorm(20, mean = 120, sd = 15)
+
+z_test_left = function(sample, mu, sd, cr_z){
+  z = (mean(sample) - mu)/(sd/sqrt(length(sample)))
+  
+  if(z &gt; cr_z){
+    print(1) #print 1 when we reject null hypothesis
+  } else {
+    print(0) #print 0 when we fail to reject null hypothesis
+  }
+  print(z)
+}
+
+z_test_left(sample1, 120, 15, qnorm(1 - 0.05))</code></pre>
+<pre><code>## [1] 0
+## [1] 0.6333609</code></pre>
+<p>In this case, z statistic (0.633) is less than the critical value (1.64) hence we fail to reject the null hypothesis.<br />
+</p>
+<hr />
+</div>
+<div id="bnow-generate-100-random-samples-of-size-n-20-from-the-underlying-null-true-distribution-and-repeat-the-process-in-part-a-for-each-sample-calculate-the-test-statistic-compare-to-the-critical-value-and-record-1-or-0-based-on-criteria-above.-report-the-percentage-of-1s-and-0s-respectively-across-the-100-samples.-the-percentage-of-1s-represents-the-type-i-error." class="section level5">
+<h5><strong>b)Now generate 100 random samples of size n = 20 from the underlying (null) true distribution and repeat the process in part (a) for each sample (calculate the test statistic, compare to the critical value, and record 1 or 0 based on criteria above). Report the percentage of 1s and 0s respectively across the 100 samples. The percentage of 1s represents the type I error. </strong></h5>
+</div>
 </div>
 
 
